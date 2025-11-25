@@ -170,31 +170,48 @@ dashboard-mobile-mineros/
 
 ---
 
-## 📋 PRÓXIMAS MEJORAS (v1.1)
+## ✅ FASE 7: Hub de Conocimiento - COMPLETADA
 
-### 7.1 Heatmap de Actividad (Estilo GitHub) 🔥
-**Problema:** El gráfico de barras actual ocupa mucho espacio vertical.
-**Propuesta:**
-- Cambiar barras por fila de "cuadraditos" (heatmap horizontal)
-- Últimos 14 días en una línea compacta
-- Verde oscuro = mucha actividad, verde claro = poca
-- Más compacto y "hacker"
-**Esfuerzo estimado:** 30 min
+### 7.1 Nuevo concepto de Stats ✅
+- Stats orientadas a inventario: Production, Prototype, Tools, Flows
+- Eliminado timer de sesiones y gráfico de actividad
+- Añadido "Top Stack" con tecnologías más usadas
 
-### 7.2 Smart Pasting 🧠
-**Problema:** Los enlaces se ven como texto plano sin contexto.
-**Propuesta:**
-- Detectar URLs al guardar captura
-- Si es GitHub: mostrar icono 🐙 + repo/issue
-- Si es YouTube: mostrar icono ▶️ + extraer título
-- Otros enlaces: icono 🔗 + dominio
-- Regex para detectar: `https?://[^\s]+`
-**Esfuerzo estimado:** 45 min
+### 7.2 Vista Stack rediseñada ✅
+- Tabs: Tools | Patterns | Flows
+- Cards clicables con modal de detalle
+- Conexión con API DirectOS para cargar datos reales
+- Fallback a datos locales si offline
 
-### 7.3 (Bonus) Búsqueda rápida 🔍
-**Propuesta:** Barra de búsqueda en Home para filtrar proyectos y capturas
-**Esfuerzo estimado:** 30 min
+### 7.3 Sistema de bocetos de proyectos ✅
+- FAB expandible: Nueva captura | Nuevo proyecto
+- Modal para crear bocetos con nombre, idea y stack
+- Bocetos guardados en LocalStorage
+- Filtro "Bocetos" en vista Projects
+- Integración visual en lista de proyectos
+
+### 7.4 Modales de detalle ✅
+- `showToolDetail()`: categoría, descripción, nivel, siguiente paso
+- `showPatternDetail()`: problema, prompt completo, flujo, stack
+- `showFlowDetail()`: casos de uso, flujo, stack, complejidad
 
 ---
 
-*"Piano piano se arriva lontano"* - ¡Todas las fases principales completadas! 🎉
+## 📋 PRÓXIMAS MEJORAS (v1.2)
+
+### 8.1 Smart Pasting 🧠
+**Propuesta:**
+- Detectar URLs al guardar captura
+- Si es GitHub: mostrar icono 🐙 + repo/issue
+- Si es YouTube: mostrar icono ▶️ + título
+- Otros enlaces: icono 🔗 + dominio
+
+### 8.2 Búsqueda rápida 🔍
+**Propuesta:** Barra de búsqueda global para filtrar proyectos, capturas y tools
+
+### 8.3 Promocionar boceto a proyecto 📤
+**Propuesta:** Botón para convertir boceto en proyecto real (crear archivo .md en DirectOS)
+
+---
+
+*"Piano piano se arriva lontano"* - Dashboard v1.1 completado

@@ -197,90 +197,29 @@
         letter-spacing: 0.03em;
       }
 
-      /* Activity Graph */
-      .activity-graph {
+      /* Top Stack */
+      .top-stack {
         display: flex;
-        align-items: flex-end;
-        gap: 3px;
-        height: 50px;
-        padding: 0.5rem 0;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 0.25rem 0;
       }
 
-      .activity-bar {
-        flex: 1;
-        background: var(--border);
-        border-radius: 2px;
-        min-height: 4px;
-        transition: all 0.3s ease;
-      }
-
-      .activity-bar.active {
-        background: var(--accent);
-      }
-
-      .activity-bar.today {
-        background: var(--ok);
-        box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
-      }
-
-      /* Session Timer */
-      .session-card {
-        background: var(--bg-soft);
+      .top-stack-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.35rem 0.6rem;
+        background: var(--bg);
         border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 1rem;
-        margin-bottom: 1rem;
-        text-align: center;
-      }
-
-      .session-card.active {
-        border-color: var(--ok);
-        background: rgba(34, 197, 94, 0.08);
-      }
-
-      .session-timer {
-        font-size: 2.5rem;
-        font-weight: 700;
-        font-family: "SF Mono", Monaco, monospace;
+        border-radius: 8px;
+        font-size: 0.8rem;
         color: var(--text);
-        margin: 0.5rem 0;
       }
 
-      .session-card.active .session-timer {
-        color: var(--ok);
-      }
-
-      .session-label {
-        font-size: 0.75rem;
+      .top-stack-item .count {
         color: var(--muted);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-      }
-
-      .session-btn {
-        width: 100%;
-        padding: 0.75rem;
-        border-radius: 12px;
-        font-size: 0.95rem;
-        font-weight: 600;
-        cursor: pointer;
-        border: none;
-        margin-top: 0.75rem;
-        transition: all 0.15s ease;
-      }
-
-      .session-btn.start {
-        background: var(--ok);
-        color: white;
-      }
-
-      .session-btn.stop {
-        background: var(--danger);
-        color: white;
-      }
-
-      .session-btn:active {
-        transform: scale(0.98);
+        font-size: 0.7rem;
       }
 
       /* Project Mini Cards */
@@ -521,6 +460,82 @@
       }
 
       /* ===== STACK VIEW ===== */
+      .stack-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        background: var(--bg);
+        padding: 0.35rem;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+      }
+
+      .stack-tab {
+        flex: 1;
+        padding: 0.6rem 0.5rem;
+        background: transparent;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--muted);
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+
+      .stack-tab.active {
+        background: var(--accent-soft);
+        color: var(--accent);
+      }
+
+      .stack-tab:active {
+        transform: scale(0.97);
+      }
+
+      .stack-item-card {
+        background: var(--bg-soft);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 0.85rem;
+        margin-bottom: 0.6rem;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+
+      .stack-item-card:active {
+        transform: scale(0.98);
+        border-color: var(--accent);
+      }
+
+      .stack-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.35rem;
+      }
+
+      .stack-item-name {
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+
+      .stack-item-badge {
+        font-size: 0.65rem;
+        padding: 0.15rem 0.4rem;
+        border-radius: 999px;
+        background: var(--bg);
+        color: var(--muted);
+      }
+
+      .stack-item-desc {
+        font-size: 0.8rem;
+        color: var(--muted);
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
       .stack-category {
         margin-bottom: 1.25rem;
       }
@@ -835,10 +850,18 @@
       }
 
       /* ===== FAB ===== */
-      .fab {
+      .fab-container {
         position: fixed;
         bottom: calc(4.5rem + env(safe-area-inset-bottom));
         right: 1rem;
+        z-index: 100;
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .fab {
         width: 56px;
         height: 56px;
         background: var(--accent);
@@ -848,12 +871,52 @@
         font-size: 1.5rem;
         cursor: pointer;
         box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
-        z-index: 100;
         transition: all 0.2s ease;
       }
 
       .fab:active {
         transform: scale(0.9);
+      }
+
+      .fab.rotate {
+        transform: rotate(45deg);
+      }
+
+      .fab-menu {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(20px);
+        transition: all 0.2s ease;
+      }
+
+      .fab-container.open .fab-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .fab-option {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--bg-soft);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 0.5rem 1rem;
+        color: var(--text);
+        font-size: 0.85rem;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.15s ease;
+      }
+
+      .fab-option:active {
+        transform: scale(0.95);
+        background: var(--accent-soft);
       }
 
       /* ===== BOTTOM NAV ===== */
@@ -1050,6 +1113,101 @@
         transform: scale(0.98);
       }
 
+      /* Detail Modal */
+      .detail-section {
+        margin-bottom: 1rem;
+      }
+
+      .detail-section-title {
+        font-size: 0.75rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.4rem;
+      }
+
+      .detail-content {
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      .detail-code {
+        background: var(--bg);
+        border-radius: 8px;
+        padding: 0.75rem;
+        font-family: "SF Mono", Monaco, monospace;
+        font-size: 0.8rem;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        color: var(--ok);
+      }
+
+      .detail-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+      }
+
+      .detail-tag {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--muted);
+      }
+
+      /* Draft form */
+      .draft-form-group {
+        margin-bottom: 1rem;
+      }
+
+      .draft-form-group label {
+        display: block;
+        font-size: 0.75rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        margin-bottom: 0.35rem;
+      }
+
+      .draft-form-group input {
+        width: 100%;
+        padding: 0.65rem;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--text);
+        font-size: 0.9rem;
+      }
+
+      .draft-form-group input:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+
+      .draft-stack-selector {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+      }
+
+      .draft-stack-chip {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.55rem;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--muted);
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+
+      .draft-stack-chip.selected {
+        background: var(--accent-soft);
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
       /* Capture selectors (project + priority) */
       .capture-selectors {
         display: flex;
@@ -1190,39 +1348,29 @@
         <!-- Stats -->
         <div class="stats-grid">
           <div class="stat-card">
-            <div class="stat-value ok" id="statStreak">0</div>
-            <div class="stat-label">Días racha</div>
+            <div class="stat-value ok" id="statProduction">0</div>
+            <div class="stat-label">Production</div>
           </div>
           <div class="stat-card">
-            <div class="stat-value" id="statWeek">0</div>
-            <div class="stat-label">Esta semana</div>
+            <div class="stat-value purple" id="statPrototype">0</div>
+            <div class="stat-label">Prototype</div>
           </div>
           <div class="stat-card">
-            <div class="stat-value purple" id="statProjects">0</div>
-            <div class="stat-label">Proyectos</div>
+            <div class="stat-value" id="statTools">0</div>
+            <div class="stat-label">Tools</div>
           </div>
           <div class="stat-card">
-            <div class="stat-value warn" id="statCaptures">0</div>
-            <div class="stat-label">Capturas</div>
+            <div class="stat-value warn" id="statFlows">0</div>
+            <div class="stat-label">Flows</div>
           </div>
         </div>
 
-        <!-- Session Timer -->
-        <div class="session-card" id="sessionCard">
-          <div class="session-label">Sesión de trabajo</div>
-          <div class="session-timer" id="sessionTimer">00:00</div>
-          <button class="session-btn start" id="sessionBtn" onclick="toggleSession()">
-            Iniciar sesión
-          </button>
-        </div>
-
-        <!-- Activity Graph -->
-        <div class="card">
+        <!-- Top Stack -->
+        <div class="card" id="topStackCard">
           <div class="card-header">
-            <span class="card-title">📊 Actividad (14 días)</span>
-            <span class="card-badge" id="activityTotal">0 min</span>
+            <span class="card-title">🔧 Stack principal</span>
           </div>
-          <div class="activity-graph" id="activityGraph"></div>
+          <div class="top-stack" id="topStack"></div>
         </div>
 
         <!-- Recent Projects -->
@@ -1242,6 +1390,7 @@
           <span class="filter-pill" data-filter="production" onclick="setProjectFilter('production')">Production</span>
           <span class="filter-pill" data-filter="prototype" onclick="setProjectFilter('prototype')">Prototype</span>
           <span class="filter-pill" data-filter="archived" onclick="setProjectFilter('archived')">Archived</span>
+          <span class="filter-pill" data-filter="draft" onclick="setProjectFilter('draft')">📝 Bocetos</span>
         </div>
         <div id="projectsList"></div>
       </div>
@@ -1257,7 +1406,14 @@
 
       <!-- ===== STACK VIEW ===== -->
       <div class="view" id="viewStack">
-        <div class="section-title">🛠️ Kit de herramientas</div>
+        <!-- Tabs -->
+        <div class="stack-tabs">
+          <button class="stack-tab active" data-tab="tools" onclick="setStackTab('tools')">🔧 Tools</button>
+          <button class="stack-tab" data-tab="patterns" onclick="setStackTab('patterns')">🧩 Patterns</button>
+          <button class="stack-tab" data-tab="flows" onclick="setStackTab('flows')">⚡ Flows</button>
+        </div>
+
+        <!-- Tab Content -->
         <div id="stackContent"></div>
 
         <!-- DirectOS Sync Section -->
@@ -1267,7 +1423,7 @@
             <span class="api-status" id="apiStatus">⚪ Offline</span>
           </div>
           <p style="font-size: 0.8rem; color: var(--muted); margin: 0.5rem 0;">
-            Sincroniza proyectos desde DirectOS si está corriendo en localhost:8000
+            Sincroniza desde DirectOS (localhost:8000)
           </p>
           <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
             <button class="backup-btn" onclick="syncWithAPI()" style="flex: 1;">🔄 Sincronizar</button>
@@ -1297,7 +1453,13 @@
       </div>
 
       <!-- ===== FAB ===== -->
-      <button class="fab" onclick="openCaptureModal()">+</button>
+      <div class="fab-container" id="fabContainer">
+        <button class="fab" id="fabBtn" onclick="toggleFab()">+</button>
+        <div class="fab-menu">
+          <div class="fab-option" onclick="openCaptureModal(); closeFab();">💡 Nueva captura</div>
+          <div class="fab-option" onclick="openDraftModal(); closeFab();">📝 Nuevo proyecto</div>
+        </div>
+      </div>
 
       <!-- ===== BOTTOM NAV ===== -->
       <nav class="bottom-nav">
@@ -1371,6 +1533,46 @@
         </div>
       </div>
 
+      <!-- ===== DETAIL MODAL ===== -->
+      <div class="modal-overlay" id="detailModal">
+        <div class="modal">
+          <div class="modal-handle"></div>
+          <div class="modal-title" id="detailTitle">Detalle</div>
+          <div id="detailContent"></div>
+          <div class="modal-actions">
+            <button class="modal-btn secondary" onclick="closeDetailModal()">Cerrar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== DRAFT MODAL ===== -->
+      <div class="modal-overlay" id="draftModal">
+        <div class="modal">
+          <div class="modal-handle"></div>
+          <div class="modal-title">📝 Nuevo Proyecto (Boceto)</div>
+
+          <div class="draft-form-group">
+            <label>Nombre</label>
+            <input type="text" id="draftName" placeholder="Nombre del proyecto...">
+          </div>
+
+          <div class="draft-form-group">
+            <label>Idea / Problema</label>
+            <textarea id="draftIdea" placeholder="¿Qué problema resuelve? ¿Cuál es la idea principal?"></textarea>
+          </div>
+
+          <div class="draft-form-group">
+            <label>Stack inicial (opcional)</label>
+            <div class="draft-stack-selector" id="draftStackSelector"></div>
+          </div>
+
+          <div class="modal-actions">
+            <button class="modal-btn secondary" onclick="closeDraftModal()">Cancelar</button>
+            <button class="modal-btn primary" onclick="saveDraft()">Guardar boceto</button>
+          </div>
+        </div>
+      </div>
+
       <!-- ===== TOAST ===== -->
       <div class="toast" id="toast">Guardado</div>
     </div>
@@ -1389,12 +1591,19 @@
         endpoints: {
           health: '/api/health',
           projects: '/api/projects',
-          project: '/api/projects/'  // + id
+          project: '/api/projects/',  // + id
+          tools: '/api/tools',
+          patterns: '/api/patterns',
+          flows: '/api/flows',
+          stats: '/api/content/stats'
         },
         timeout: 5000
       };
 
       let apiAvailable = false;
+      let TOOLS = [];
+      let PATTERNS = [];
+      let FLOWS = [];
 
       // ===== DATA =====
       // Proyectos locales como fallback (si DirectOS no está corriendo)
@@ -1596,6 +1805,48 @@
         return null;
       }
 
+      async function fetchToolsFromAPI() {
+        if (!apiAvailable) return null;
+        try {
+          const response = await fetch(API_CONFIG.baseUrl + API_CONFIG.endpoints.tools);
+          if (response.ok) {
+            const data = await response.json();
+            return data.tools || data;
+          }
+        } catch (e) {
+          console.log('[API] Error fetching tools:', e);
+        }
+        return null;
+      }
+
+      async function fetchPatternsFromAPI() {
+        if (!apiAvailable) return null;
+        try {
+          const response = await fetch(API_CONFIG.baseUrl + API_CONFIG.endpoints.patterns);
+          if (response.ok) {
+            const data = await response.json();
+            return data.patterns || data;
+          }
+        } catch (e) {
+          console.log('[API] Error fetching patterns:', e);
+        }
+        return null;
+      }
+
+      async function fetchFlowsFromAPI() {
+        if (!apiAvailable) return null;
+        try {
+          const response = await fetch(API_CONFIG.baseUrl + API_CONFIG.endpoints.flows);
+          if (response.ok) {
+            const data = await response.json();
+            return data.flows || data;
+          }
+        } catch (e) {
+          console.log('[API] Error fetching flows:', e);
+        }
+        return null;
+      }
+
       function getProjectIcon(id, stack) {
         // Mapeo de iconos por proyecto o stack
         const iconMap = {
@@ -1628,15 +1879,40 @@
 
         if (health) {
           updateApiStatus('online');
-          const apiProjects = await fetchProjectsFromAPI();
+
+          // Fetch all data in parallel
+          const [apiProjects, apiTools, apiPatterns, apiFlows] = await Promise.all([
+            fetchProjectsFromAPI(),
+            fetchToolsFromAPI(),
+            fetchPatternsFromAPI(),
+            fetchFlowsFromAPI()
+          ]);
+
           if (apiProjects && apiProjects.length > 0) {
             PROJECTS = apiProjects;
-            console.log('[API] Proyectos cargados desde DirectOS:', PROJECTS.length);
-            renderHome();
-            renderProjects();
-            populateProjectDropdown();
-            showToast(`Sincronizado: ${PROJECTS.length} proyectos`);
+            console.log('[API] Proyectos cargados:', PROJECTS.length);
           }
+
+          if (apiTools && apiTools.length > 0) {
+            TOOLS = apiTools;
+            console.log('[API] Tools cargados:', TOOLS.length);
+          }
+
+          if (apiPatterns && apiPatterns.length > 0) {
+            PATTERNS = apiPatterns;
+            console.log('[API] Patterns cargados:', PATTERNS.length);
+          }
+
+          if (apiFlows && apiFlows.length > 0) {
+            FLOWS = apiFlows;
+            console.log('[API] Flows cargados:', FLOWS.length);
+          }
+
+          renderHome();
+          renderProjects();
+          renderStack();
+          populateProjectDropdown();
+          showToast(`Sincronizado: ${PROJECTS.length} proyectos, ${TOOLS.length} tools`);
         } else {
           updateApiStatus('offline');
         }
@@ -1722,15 +1998,11 @@
         captureType: 'idea',
         capturePriority: 'low', // low, medium, high
         captures: [],
-        activityLog: {}, // { "2024-11-25": { sessions: 2, minutes: 75 }, ... }
+        drafts: [], // Bocetos de proyectos
         stackLevels: {},
-        projectFilter: 'all', // all, production, prototype, archived
-        // Session tracking
-        sessionActive: false,
-        sessionStart: null
+        stackTab: 'tools', // tools, patterns, flows
+        projectFilter: 'all' // all, production, prototype, archived, draft
       };
-
-      let sessionTimer = null; // Interval for updating timer display
 
       // ===== SECURITY: Escape HTML to prevent XSS =====
       function escapeHTML(str) {
@@ -1749,12 +2021,6 @@
         renderStack();
         renderCaptures();
 
-        // Restore active session timer if it was running
-        if (state.sessionActive && state.sessionStart) {
-          sessionTimer = setInterval(updateSessionUI, 1000);
-        }
-        updateSessionUI();
-
         // Update date every minute
         setInterval(updateHeaderDate, 60000);
 
@@ -1768,36 +2034,25 @@
         if (saved) {
           const data = JSON.parse(saved);
           state.captures = data.captures || [];
+          state.drafts = data.drafts || [];
           state.stackLevels = data.stackLevels || {};
-          state.activityLog = data.activityLog || {};
-
-          // Restore active session if browser was closed
-          if (data.sessionActive && data.sessionStart) {
-            state.sessionActive = true;
-            state.sessionStart = data.sessionStart;
-          }
         }
       }
 
       function saveState() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify({
           captures: state.captures,
-          stackLevels: state.stackLevels,
-          activityLog: state.activityLog,
-          sessionActive: state.sessionActive,
-          sessionStart: state.sessionStart
+          drafts: state.drafts,
+          stackLevels: state.stackLevels
         }));
         showToast('Guardado');
       }
 
       function saveStateSilent() {
-        // Save without toast (for timer updates)
         localStorage.setItem(STORAGE_KEY, JSON.stringify({
           captures: state.captures,
-          stackLevels: state.stackLevels,
-          activityLog: state.activityLog,
-          sessionActive: state.sessionActive,
-          sessionStart: state.sessionStart
+          drafts: state.drafts,
+          stackLevels: state.stackLevels
         }));
       }
 
@@ -1875,40 +2130,30 @@
       }
 
       function renderHome() {
-        // Stats - using real activity data
-        const streak = calculateStreak();
-        const weekMinutes = getWeekMinutes();
-        const pendingCaptures = state.captures.filter(c => !c.processed).length;
+        // Stats by project status
+        const production = PROJECTS.filter(p => p.status === 'production').length;
+        const prototype = PROJECTS.filter(p => p.status === 'prototype').length;
+        const toolsCount = TOOLS.length;
+        const flowsCount = FLOWS.length;
 
-        document.getElementById('statStreak').textContent = streak;
-        document.getElementById('statWeek').textContent = weekMinutes + 'min';
-        document.getElementById('statProjects').textContent = PROJECTS.length;
-        document.getElementById('statCaptures').textContent = pendingCaptures;
+        document.getElementById('statProduction').textContent = production;
+        document.getElementById('statPrototype').textContent = prototype;
+        document.getElementById('statTools').textContent = toolsCount;
+        document.getElementById('statFlows').textContent = flowsCount;
 
-        // Activity graph - real data from last 14 days
-        const graphEl = document.getElementById('activityGraph');
-        const activityData = getLast14DaysActivity();
-        const maxActivity = Math.max(...activityData, 1);
-        graphEl.innerHTML = activityData.map((val, i) => {
-          const height = Math.max(4, (val / maxActivity) * 50);
-          const isToday = i === activityData.length - 1;
-          const isActive = val > 0;
-          return `<div class="activity-bar ${isActive ? 'active' : ''} ${isToday ? 'today' : ''}" style="height: ${height}px"></div>`;
-        }).join('');
+        // Top Stack (most used technologies across projects)
+        renderTopStack();
 
-        const totalMinutes = activityData.reduce((a, b) => a + b, 0);
-        document.getElementById('activityTotal').textContent = totalMinutes + ' min';
-
-        // Recent projects (sorted by lastActivity)
+        // Recent projects (production first, then by name)
         const recentProjects = [...PROJECTS]
-          .sort((a, b) => a.lastActivity - b.lastActivity)
+          .filter(p => p.status === 'production' || p.status === 'prototype')
           .slice(0, 3);
 
         document.getElementById('recentProjects').innerHTML = recentProjects.map(p => `
           <div class="project-mini" onclick="showProjectDetail('${p.id}')">
             <div class="project-icon">${p.icon}</div>
             <div class="project-info">
-              <div class="project-name">${p.name}</div>
+              <div class="project-name">${escapeHTML(p.name)}</div>
               <div class="project-meta">${p.stack.slice(0, 2).join(' · ')}</div>
             </div>
             <span class="project-status ${p.status}">${p.status}</span>
@@ -1942,14 +2187,92 @@
         }
       }
 
+      function renderTopStack() {
+        const topStack = getTopStack(5);
+        const el = document.getElementById('topStack');
+
+        if (topStack.length === 0) {
+          el.innerHTML = '<span style="color: var(--muted); font-size: 0.85rem;">Sincroniza con DirectOS para ver tu stack</span>';
+          return;
+        }
+
+        el.innerHTML = topStack.map(([tech, count]) => `
+          <span class="top-stack-item">${escapeHTML(tech)} <span class="count">(${count})</span></span>
+        `).join('');
+      }
+
+      function getTopStack(limit = 5) {
+        const counts = {};
+        PROJECTS.forEach(p => {
+          (p.stack || []).forEach(tech => {
+            const normalized = tech.toLowerCase();
+            counts[tech] = (counts[tech] || 0) + 1;
+          });
+        });
+        return Object.entries(counts)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, limit);
+      }
+
       function renderProjects() {
         // Filter projects based on state.projectFilter
-        let filtered = PROJECTS;
-        if (state.projectFilter !== 'all') {
+        let filtered = [];
+
+        if (state.projectFilter === 'draft') {
+          // Show only drafts
+          filtered = state.drafts;
+        } else if (state.projectFilter === 'all') {
+          filtered = PROJECTS;
+        } else {
           filtered = PROJECTS.filter(p => p.status === state.projectFilter);
         }
 
-        if (filtered.length === 0) {
+        let html = '';
+
+        // Show drafts section if on 'all' or 'draft' filter
+        if (state.projectFilter === 'all' && state.drafts.length > 0) {
+          html += `<div class="section-title" style="margin-bottom: 0.75rem;">📝 Bocetos</div>`;
+          html += state.drafts.map(d => `
+            <div class="project-card" style="border-left: 3px solid var(--warn);">
+              <div class="project-card-header">
+                <span class="project-card-title">📝 ${escapeHTML(d.name)}</span>
+                <span class="project-status" style="background: rgba(245, 158, 11, 0.15); color: var(--warn);">boceto</span>
+              </div>
+              <div class="project-desc">${escapeHTML(d.idea || 'Sin descripción')}</div>
+              <div class="project-tags">
+                ${d.stack.slice(0, 3).map(s => `<span class="tag">${escapeHTML(s)}</span>`).join('')}
+                <span class="tag" style="color: var(--muted); cursor: pointer;" onclick="event.stopPropagation(); deleteDraft('${d.id}')">🗑️ Eliminar</span>
+              </div>
+            </div>
+          `).join('');
+          html += `<div class="section-title" style="margin: 1rem 0 0.75rem;">📁 Proyectos</div>`;
+        }
+
+        if (state.projectFilter === 'draft') {
+          if (filtered.length === 0) {
+            document.getElementById('projectsList').innerHTML = `
+              <div class="empty-state">
+                <div class="empty-state-icon">📝</div>
+                <p>Sin bocetos</p>
+                <p style="font-size: 0.8rem;">Usa el botón + para crear un boceto</p>
+              </div>
+            `;
+            return;
+          }
+          html = filtered.map(d => `
+            <div class="project-card" style="border-left: 3px solid var(--warn);">
+              <div class="project-card-header">
+                <span class="project-card-title">📝 ${escapeHTML(d.name)}</span>
+                <span class="project-status" style="background: rgba(245, 158, 11, 0.15); color: var(--warn);">boceto</span>
+              </div>
+              <div class="project-desc">${escapeHTML(d.idea || 'Sin descripción')}</div>
+              <div class="project-tags">
+                ${d.stack.slice(0, 3).map(s => `<span class="tag">${escapeHTML(s)}</span>`).join('')}
+                <span class="tag" style="color: var(--muted); cursor: pointer;" onclick="event.stopPropagation(); deleteDraft('${d.id}')">🗑️ Eliminar</span>
+              </div>
+            </div>
+          `).join('');
+        } else if (filtered.length === 0 && state.projectFilter !== 'all') {
           document.getElementById('projectsList').innerHTML = `
             <div class="empty-state">
               <div class="empty-state-icon">📁</div>
@@ -1957,44 +2280,141 @@
             </div>
           `;
           return;
+        } else {
+          html += filtered.map(p => `
+            <div class="project-card" onclick="showProjectDetail('${p.id}')">
+              <div class="project-card-header">
+                <span class="project-card-title">${p.icon} ${escapeHTML(p.name)}</span>
+                <span class="project-status ${p.status}">${p.status}</span>
+              </div>
+              <div class="project-desc">${escapeHTML(p.description)}</div>
+              <div class="project-tags">
+                ${(p.stack || []).slice(0, 3).map(s => `<span class="tag">${escapeHTML(s)}</span>`).join('')}
+                <span class="tag highlight">${p.version}</span>
+              </div>
+            </div>
+          `).join('');
         }
 
-        document.getElementById('projectsList').innerHTML = filtered.map(p => `
-          <div class="project-card" onclick="showProjectDetail('${p.id}')">
-            <div class="project-card-header">
-              <span class="project-card-title">${p.icon} ${p.name}</span>
-              <span class="project-status ${p.status}">${p.status}</span>
-            </div>
-            <div class="project-desc">${escapeHTML(p.description)}</div>
-            <div class="project-tags">
-              ${p.stack.slice(0, 3).map(s => `<span class="tag">${escapeHTML(s)}</span>`).join('')}
-              <span class="tag highlight">${p.version}</span>
-            </div>
+        document.getElementById('projectsList').innerHTML = html;
+      }
+
+      function setStackTab(tab) {
+        state.stackTab = tab;
+        haptic(5);
+
+        // Update tab buttons
+        document.querySelectorAll('.stack-tab').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.tab === tab);
+        });
+
+        renderStack();
+      }
+
+      function renderStack() {
+        const el = document.getElementById('stackContent');
+        const tab = state.stackTab;
+
+        if (tab === 'tools') {
+          renderToolsList(el);
+        } else if (tab === 'patterns') {
+          renderPatternsList(el);
+        } else if (tab === 'flows') {
+          renderFlowsList(el);
+        }
+      }
+
+      function renderToolsList(el) {
+        if (TOOLS.length === 0) {
+          // Fallback to local STACK data
+          let html = '';
+          for (const [category, data] of Object.entries(STACK)) {
+            html += `
+              <div class="stack-category">
+                <div class="stack-category-title">${data.title}</div>
+                ${data.tools.map(tool => {
+                  const level = state.stackLevels[tool.name] || tool.level;
+                  return `
+                    <div class="stack-tool">
+                      <span class="stack-tool-name">${tool.name}</span>
+                      <span class="stack-tool-level level-${level}" onclick="cycleLevel('${tool.name}')">${level}</span>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            `;
+          }
+          el.innerHTML = html;
+          return;
+        }
+
+        // Group tools by category
+        const grouped = {};
+        TOOLS.forEach(tool => {
+          const cat = tool.category || 'Otros';
+          if (!grouped[cat]) grouped[cat] = [];
+          grouped[cat].push(tool);
+        });
+
+        el.innerHTML = Object.entries(grouped).map(([cat, tools]) => `
+          <div class="stack-category">
+            <div class="stack-category-title">${cat}</div>
+            ${tools.map(tool => `
+              <div class="stack-item-card" onclick="showToolDetail('${tool.id}')">
+                <div class="stack-item-header">
+                  <span class="stack-item-name">${escapeHTML(tool.name)}</span>
+                  <span class="stack-item-badge">${tool.level || 'learning'}</span>
+                </div>
+                <div class="stack-item-desc">${escapeHTML(tool.tag || tool.description || '')}</div>
+              </div>
+            `).join('')}
           </div>
         `).join('');
       }
 
-      function renderStack() {
-        let html = '';
-
-        for (const [category, data] of Object.entries(STACK)) {
-          html += `
-            <div class="stack-category">
-              <div class="stack-category-title">${data.title}</div>
-              ${data.tools.map(tool => {
-                const level = state.stackLevels[tool.name] || tool.level;
-                return `
-                  <div class="stack-tool">
-                    <span class="stack-tool-name">${tool.name}</span>
-                    <span class="stack-tool-level level-${level}" onclick="cycleLevel('${tool.name}')">${level}</span>
-                  </div>
-                `;
-              }).join('')}
+      function renderPatternsList(el) {
+        if (PATTERNS.length === 0) {
+          el.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-state-icon">🧩</div>
+              <p>Sin patterns cargados</p>
+              <p style="font-size: 0.8rem;">Sincroniza con DirectOS para ver tus patterns</p>
             </div>
           `;
+          return;
         }
 
-        document.getElementById('stackContent').innerHTML = html;
+        el.innerHTML = PATTERNS.map(pattern => `
+          <div class="stack-item-card" onclick="showPatternDetail('${pattern.id}')">
+            <div class="stack-item-header">
+              <span class="stack-item-name">${pattern.emoji || '🧩'} ${escapeHTML(pattern.name)}</span>
+            </div>
+            <div class="stack-item-desc">${escapeHTML(pattern.problem || '')}</div>
+          </div>
+        `).join('');
+      }
+
+      function renderFlowsList(el) {
+        if (FLOWS.length === 0) {
+          el.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-state-icon">⚡</div>
+              <p>Sin flows cargados</p>
+              <p style="font-size: 0.8rem;">Sincroniza con DirectOS para ver tus flows</p>
+            </div>
+          `;
+          return;
+        }
+
+        el.innerHTML = FLOWS.map(flow => `
+          <div class="stack-item-card" onclick="showFlowDetail('${flow.id}')">
+            <div class="stack-item-header">
+              <span class="stack-item-name">${flow.emoji || '⚡'} ${escapeHTML(flow.title || flow.name || flow.id)}</span>
+              <span class="stack-item-badge">${flow.complexity || 'mid'}</span>
+            </div>
+            <div class="stack-item-desc">${escapeHTML(flow.useCase || flow.description || '')}</div>
+          </div>
+        `).join('');
       }
 
       function renderCaptures() {
@@ -2035,6 +2455,22 @@
 
         // Initialize swipe handlers
         initSwipeHandlers();
+      }
+
+      // ===== FAB MENU =====
+      function toggleFab() {
+        const container = document.getElementById('fabContainer');
+        const btn = document.getElementById('fabBtn');
+        container.classList.toggle('open');
+        btn.classList.toggle('rotate');
+        haptic(5);
+      }
+
+      function closeFab() {
+        const container = document.getElementById('fabContainer');
+        const btn = document.getElementById('fabBtn');
+        container.classList.remove('open');
+        btn.classList.remove('rotate');
       }
 
       // ===== CAPTURES =====
@@ -2329,130 +2765,214 @@
         return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
       }
 
-      // ===== SESSION TIMER =====
-      function getTodayKey() {
-        return new Date().toISOString().split('T')[0];
+      // ===== DETAIL MODAL =====
+      function showToolDetail(id) {
+        const tool = TOOLS.find(t => t.id === id);
+        if (!tool) return;
+
+        haptic(10);
+        document.getElementById('detailTitle').textContent = `🔧 ${tool.name}`;
+
+        let html = '';
+
+        if (tool.category) {
+          html += `<div class="detail-section">
+            <div class="detail-section-title">Categoría</div>
+            <div class="detail-content">${escapeHTML(tool.category)}</div>
+          </div>`;
+        }
+
+        if (tool.description || tool.content) {
+          html += `<div class="detail-section">
+            <div class="detail-section-title">Por qué en minerOS</div>
+            <div class="detail-content">${escapeHTML(tool.description || tool.content || '')}</div>
+          </div>`;
+        }
+
+        if (tool.level) {
+          html += `<div class="detail-section">
+            <div class="detail-section-title">Nivel</div>
+            <div class="detail-content">${tool.level}</div>
+          </div>`;
+        }
+
+        if (tool.next) {
+          html += `<div class="detail-section">
+            <div class="detail-section-title">Siguiente paso</div>
+            <div class="detail-content">${escapeHTML(tool.next)}</div>
+          </div>`;
+        }
+
+        document.getElementById('detailContent').innerHTML = html;
+        document.getElementById('detailModal').classList.add('show');
       }
 
-      function toggleSession() {
-        if (state.sessionActive) {
-          stopSession();
+      function showPatternDetail(id) {
+        const pattern = PATTERNS.find(p => p.id === id);
+        if (!pattern) return;
+
+        haptic(10);
+        document.getElementById('detailTitle').textContent = `${pattern.emoji || '🧩'} ${pattern.name}`;
+
+        let html = '';
+
+        if (pattern.problem) {
+          html += `<div class="detail-section">
+            <div class="detail-section-title">Problema</div>
+            <div class="detail-content">${escapeHTML(pattern.problem)}</div>
+          </div>`;
+        }
+
+        if (pattern.prompt || pattern.content) {
+          html += `<div class="detail-section">
+            <div class="detail-section-title">Prompt</div>
+            <div class="detail-code">${escapeHTML(pattern.prompt || pattern.content || '')}</div>
+          </div>`;
+        }
+
+        if (pattern.flowDesc) {
+          html += `<div class="detail-section">
+            <div class="detail-section-title">Flujo</div>
+            <div class="detail-content">${escapeHTML(pattern.flowDesc)}</div>
+          </div>`;
+        }
+
+        if (pattern.flow && Array.isArray(pattern.flow)) {
+          html += `<div class="detail-section">
+            <div class="detail-section-title">Stack</div>
+            <div class="detail-tags">
+              ${pattern.flow.map(t => `<span class="detail-tag">${escapeHTML(t)}</span>`).join('')}
+            </div>
+          </div>`;
+        }
+
+        document.getElementById('detailContent').innerHTML = html;
+        document.getElementById('detailModal').classList.add('show');
+      }
+
+      function showFlowDetail(id) {
+        const flow = FLOWS.find(f => f.id === id);
+        if (!flow) return;
+
+        haptic(10);
+        document.getElementById('detailTitle').textContent = `${flow.emoji || '⚡'} ${flow.title || flow.name || flow.id}`;
+
+        let html = '';
+
+        if (flow.useCase || flow.description) {
+          html += `<div class="detail-section">
+            <div class="detail-section-title">Casos de uso</div>
+            <div class="detail-content">${escapeHTML(flow.useCase || flow.description || '')}</div>
+          </div>`;
+        }
+
+        if (flow.flowDesc) {
+          html += `<div class="detail-section">
+            <div class="detail-section-title">Flujo</div>
+            <div class="detail-content">${escapeHTML(flow.flowDesc)}</div>
+          </div>`;
+        }
+
+        if (flow.stack && Array.isArray(flow.stack)) {
+          html += `<div class="detail-section">
+            <div class="detail-section-title">Stack técnico</div>
+            <div class="detail-tags">
+              ${flow.stack.map(t => `<span class="detail-tag">${escapeHTML(t)}</span>`).join('')}
+            </div>
+          </div>`;
+        }
+
+        if (flow.complexity) {
+          html += `<div class="detail-section">
+            <div class="detail-section-title">Complejidad</div>
+            <div class="detail-content">${flow.complexity}</div>
+          </div>`;
+        }
+
+        document.getElementById('detailContent').innerHTML = html;
+        document.getElementById('detailModal').classList.add('show');
+      }
+
+      function closeDetailModal() {
+        document.getElementById('detailModal').classList.remove('show');
+      }
+
+      // ===== DRAFT MODAL =====
+      let selectedDraftStack = [];
+      const commonStack = ['Python', 'JavaScript', 'FastAPI', 'Flask', 'SQLite', 'HTML/CSS', 'Claude API', 'Node.js'];
+
+      function openDraftModal() {
+        haptic(10);
+        closeCaptureModal(); // Close capture modal if open
+
+        // Populate stack selector
+        const selector = document.getElementById('draftStackSelector');
+        selector.innerHTML = commonStack.map(tech => `
+          <span class="draft-stack-chip" onclick="toggleDraftStack('${tech}')">${tech}</span>
+        `).join('');
+
+        selectedDraftStack = [];
+        document.getElementById('draftName').value = '';
+        document.getElementById('draftIdea').value = '';
+        document.getElementById('draftModal').classList.add('show');
+      }
+
+      function closeDraftModal() {
+        document.getElementById('draftModal').classList.remove('show');
+      }
+
+      function toggleDraftStack(tech) {
+        const index = selectedDraftStack.indexOf(tech);
+        if (index > -1) {
+          selectedDraftStack.splice(index, 1);
         } else {
-          startSession();
+          selectedDraftStack.push(tech);
         }
+
+        // Update UI
+        document.querySelectorAll('.draft-stack-chip').forEach(chip => {
+          chip.classList.toggle('selected', selectedDraftStack.includes(chip.textContent));
+        });
       }
 
-      function startSession() {
-        state.sessionActive = true;
-        state.sessionStart = Date.now();
-        saveStateSilent();
+      function saveDraft() {
+        const name = document.getElementById('draftName').value.trim();
+        const idea = document.getElementById('draftIdea').value.trim();
 
-        updateSessionUI();
-        sessionTimer = setInterval(updateSessionUI, 1000);
-        showToast('Sesión iniciada');
-      }
-
-      function stopSession() {
-        if (!state.sessionStart) return;
-
-        // Calculate duration
-        const durationMs = Date.now() - state.sessionStart;
-        const durationMin = Math.round(durationMs / 60000);
-
-        // Save to activity log
-        const today = getTodayKey();
-        if (!state.activityLog[today]) {
-          state.activityLog[today] = { sessions: 0, minutes: 0 };
+        if (!name) {
+          showToast('Añade un nombre al proyecto');
+          return;
         }
-        state.activityLog[today].sessions++;
-        state.activityLog[today].minutes += durationMin;
 
-        // Reset session
-        state.sessionActive = false;
-        state.sessionStart = null;
-        clearInterval(sessionTimer);
-        sessionTimer = null;
+        const draft = {
+          id: 'draft-' + Date.now(),
+          name,
+          idea,
+          stack: [...selectedDraftStack],
+          createdAt: new Date().toISOString(),
+          status: 'draft'
+        };
 
+        state.drafts.push(draft);
         saveState();
-        updateSessionUI();
-        renderHome();
-        showToast(`Sesión guardada: ${durationMin} min`);
+        closeDraftModal();
+        renderProjects();
+        showToast('Boceto guardado');
+        haptic(20);
       }
 
-      function updateSessionUI() {
-        const card = document.getElementById('sessionCard');
-        const timer = document.getElementById('sessionTimer');
-        const btn = document.getElementById('sessionBtn');
-
-        if (state.sessionActive && state.sessionStart) {
-          const elapsed = Date.now() - state.sessionStart;
-          const mins = Math.floor(elapsed / 60000);
-          const secs = Math.floor((elapsed % 60000) / 1000);
-          timer.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-
-          card.classList.add('active');
-          btn.textContent = 'Detener sesión';
-          btn.classList.remove('start');
-          btn.classList.add('stop');
-        } else {
-          timer.textContent = '00:00';
-          card.classList.remove('active');
-          btn.textContent = 'Iniciar sesión';
-          btn.classList.remove('stop');
-          btn.classList.add('start');
+      function deleteDraft(id) {
+        const index = state.drafts.findIndex(d => d.id === id);
+        if (index > -1) {
+          state.drafts.splice(index, 1);
+          saveStateSilent();
+          renderProjects();
+          showToast('Boceto eliminado');
+          haptic(10);
         }
       }
 
-      function getLast14DaysActivity() {
-        const result = [];
-        const today = new Date();
-
-        for (let i = 13; i >= 0; i--) {
-          const date = new Date(today);
-          date.setDate(date.getDate() - i);
-          const key = date.toISOString().split('T')[0];
-          const dayData = state.activityLog[key] || { sessions: 0, minutes: 0 };
-          result.push(dayData.minutes);
-        }
-        return result;
-      }
-
-      function calculateStreak() {
-        let streak = 0;
-        const today = new Date();
-
-        for (let i = 0; i < 365; i++) {
-          const date = new Date(today);
-          date.setDate(date.getDate() - i);
-          const key = date.toISOString().split('T')[0];
-          const dayData = state.activityLog[key];
-
-          if (dayData && dayData.minutes > 0) {
-            streak++;
-          } else if (i > 0) {
-            // Allow today to not have activity yet
-            break;
-          }
-        }
-        return streak;
-      }
-
-      function getWeekMinutes() {
-        let total = 0;
-        const today = new Date();
-
-        for (let i = 0; i < 7; i++) {
-          const date = new Date(today);
-          date.setDate(date.getDate() - i);
-          const key = date.toISOString().split('T')[0];
-          const dayData = state.activityLog[key];
-          if (dayData) {
-            total += dayData.minutes;
-          }
-        }
-        return total;
-      }
-
+      // ===== UTILITY FUNCTIONS =====
       function showToast(message) {
         const toast = document.getElementById('toast');
         toast.textContent = message;
@@ -2463,11 +2983,11 @@
       // ===== BACKUP: EXPORT/IMPORT =====
       function exportData() {
         const data = {
-          version: '2.1',
+          version: '3.0',
           exportDate: new Date().toISOString(),
           captures: state.captures,
-          stackLevels: state.stackLevels,
-          activityLog: state.activityLog
+          drafts: state.drafts,
+          stackLevels: state.stackLevels
         };
 
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -2490,44 +3010,32 @@
             const data = JSON.parse(e.target.result);
 
             // Validar estructura
-            if (!data.captures && !data.stackLevels && !data.activityLog) {
+            if (!data.captures && !data.stackLevels && !data.drafts) {
               throw new Error('Formato inválido');
             }
 
             // Merge con datos actuales
             if (data.captures) {
-              // Añadir capturas que no existan (por id)
               const existingIds = new Set(state.captures.map(c => c.id));
               const newCaptures = data.captures.filter(c => !existingIds.has(c.id));
               state.captures = [...state.captures, ...newCaptures];
+            }
+
+            if (data.drafts) {
+              const existingIds = new Set(state.drafts.map(d => d.id));
+              const newDrafts = data.drafts.filter(d => !existingIds.has(d.id));
+              state.drafts = [...state.drafts, ...newDrafts];
             }
 
             if (data.stackLevels) {
               state.stackLevels = { ...state.stackLevels, ...data.stackLevels };
             }
 
-            if (data.activityLog) {
-              // Merge activity logs, keeping higher values
-              for (const [date, dayData] of Object.entries(data.activityLog)) {
-                if (!state.activityLog[date]) {
-                  state.activityLog[date] = dayData;
-                } else {
-                  state.activityLog[date].sessions = Math.max(
-                    state.activityLog[date].sessions,
-                    dayData.sessions
-                  );
-                  state.activityLog[date].minutes = Math.max(
-                    state.activityLog[date].minutes,
-                    dayData.minutes
-                  );
-                }
-              }
-            }
-
             saveState();
             renderHome();
             renderStack();
             renderCaptures();
+            renderProjects();
             showToast(`Importado: ${data.captures?.length || 0} capturas`);
           } catch (err) {
             showToast('Error: archivo inválido');
