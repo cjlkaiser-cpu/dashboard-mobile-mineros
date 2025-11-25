@@ -170,4 +170,31 @@ dashboard-mobile-mineros/
 
 ---
 
+## 📋 PRÓXIMAS MEJORAS (v1.1)
+
+### 7.1 Heatmap de Actividad (Estilo GitHub) 🔥
+**Problema:** El gráfico de barras actual ocupa mucho espacio vertical.
+**Propuesta:**
+- Cambiar barras por fila de "cuadraditos" (heatmap horizontal)
+- Últimos 14 días en una línea compacta
+- Verde oscuro = mucha actividad, verde claro = poca
+- Más compacto y "hacker"
+**Esfuerzo estimado:** 30 min
+
+### 7.2 Smart Pasting 🧠
+**Problema:** Los enlaces se ven como texto plano sin contexto.
+**Propuesta:**
+- Detectar URLs al guardar captura
+- Si es GitHub: mostrar icono 🐙 + repo/issue
+- Si es YouTube: mostrar icono ▶️ + extraer título
+- Otros enlaces: icono 🔗 + dominio
+- Regex para detectar: `https?://[^\s]+`
+**Esfuerzo estimado:** 45 min
+
+### 7.3 (Bonus) Búsqueda rápida 🔍
+**Propuesta:** Barra de búsqueda en Home para filtrar proyectos y capturas
+**Esfuerzo estimado:** 30 min
+
+---
+
 *"Piano piano se arriva lontano"* - ¡Todas las fases principales completadas! 🎉
