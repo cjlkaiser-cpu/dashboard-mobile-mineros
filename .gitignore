@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Generated icons (can be regenerated)
+# icons/*.png

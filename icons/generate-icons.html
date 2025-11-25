@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Generate PWA Icons</title>
+  <style>
+    body { font-family: system-ui; padding: 2rem; background: #1e293b; color: white; }
+    canvas { border: 1px solid #334155; margin: 0.5rem; }
+    .icons { display: flex; flex-wrap: wrap; gap: 1rem; }
+    button { padding: 1rem 2rem; font-size: 1rem; cursor: pointer; margin: 1rem 0; }
+    a { color: #3b82f6; }
+  </style>
+</head>
+<body>
+  <h1>minerOS Icon Generator</h1>
+  <p>Click each canvas to download the icon, or use the button to download all.</p>
+  <button onclick="downloadAll()">Download All Icons</button>
+  <div class="icons" id="icons"></div>
+
+  <script>
+    const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+    const container = document.getElementById('icons');
+
+    function drawIcon(ctx, size) {
+      const scale = size / 512;
+
+      // Background gradient
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, '#1e293b');
+      gradient.addColorStop(1, '#0f172a');
+
+      // Rounded rect background
+      ctx.fillStyle = gradient;
+      roundRect(ctx, 0, 0, size, size, 96 * scale);
+      ctx.fill();
+
+      // Coffee cup
+      ctx.save();
+      ctx.translate(128 * scale, 100 * scale);
+
+      // Cup body
+      ctx.fillStyle = '#3b82f6';
+      ctx.globalAlpha = 0.9;
+      ctx.beginPath();
+      ctx.moveTo(40 * scale, 80 * scale);
+      ctx.lineTo(40 * scale, 220 * scale);
+      ctx.quadraticCurveTo(40 * scale, 280 * scale, 128 * scale, 280 * scale);
+      ctx.quadraticCurveTo(216 * scale, 280 * scale, 216 * scale, 220 * scale);
+      ctx.lineTo(216 * scale, 80 * scale);
+      ctx.closePath();
+      ctx.fill();
+      ctx.globalAlpha = 1;
+
+      // Cup handle
+      ctx.strokeStyle = '#3b82f6';
+      ctx.lineWidth = 24 * scale;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(216 * scale, 100 * scale);
+      ctx.quadraticCurveTo(280 * scale, 100 * scale, 280 * scale, 160 * scale);
+      ctx.quadraticCurveTo(280 * scale, 220 * scale, 216 * scale, 220 * scale);
+      ctx.stroke();
+
+      // Steam
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 12 * scale;
+      [[80, 40, 90, 20, 80, 0], [128, 50, 138, 25, 128, 0], [176, 40, 186, 20, 176, 0]].forEach(([x1, y1, cx, cy, x2, y2]) => {
+        ctx.beginPath();
+        ctx.moveTo(x1 * scale, y1 * scale);
+        ctx.quadraticCurveTo(cx * scale, cy * scale, x2 * scale, y2 * scale);
+        ctx.stroke();
+      });
+
+      // Shine
+      ctx.fillStyle = 'rgba(255,255,255,0.2)';
+      ctx.beginPath();
+      ctx.ellipse(80 * scale, 140 * scale, 20 * scale, 40 * scale, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+
+      // Text (only for larger icons)
+      if (size >= 128) {
+        ctx.fillStyle = '#f1f5f9';
+        ctx.font = `700 ${64 * scale}px system-ui, -apple-system, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText('minerOS', size / 2, 420 * scale);
+      }
+    }
+
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+
+    sizes.forEach(size => {
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      canvas.title = `icon-${size}.png`;
+      canvas.style.cursor = 'pointer';
+      canvas.onclick = () => download(canvas, size);
+
+      const ctx = canvas.getContext('2d');
+      drawIcon(ctx, size);
+
+      const label = document.createElement('div');
+      label.innerHTML = `<strong>${size}x${size}</strong>`;
+      label.appendChild(canvas);
+      container.appendChild(label);
+    });
+
+    function download(canvas, size) {
+      const link = document.createElement('a');
+      link.download = `icon-${size}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    function downloadAll() {
+      document.querySelectorAll('canvas').forEach((canvas, i) => {
+        setTimeout(() => canvas.click(), i * 200);
+      });
+    }
+  </script>
+</body>
+</html>
