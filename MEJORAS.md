@@ -150,7 +150,9 @@ async def get_git_activity(id: str, days: int = 14):
 | **3** | ✅ | Swipe + Zen mode + Haptic |
 | **4** | ✅ | Markdown + Proyecto + Prioridad |
 | **5** | ✅ | PWA instalable + Offline |
-| **6** | 🟡 | API DirectOS (6.1 ✅, 6.2-6.3 pendientes) |
+| **6** | ✅ | API DirectOS + Sync multi-dispositivo |
+| **7** | ✅ | Hub de Conocimiento (Tools/Patterns/Flows) |
+| **8** | ✅ | Smart Pasting + Búsqueda + Promoción bocetos |
 
 ---
 
@@ -197,21 +199,42 @@ dashboard-mobile-mineros/
 
 ---
 
-## 📋 PRÓXIMAS MEJORAS (v1.2)
+## ✅ FASE 8: Mejoras v1.2 - COMPLETADA
 
-### 8.1 Smart Pasting 🧠
-**Propuesta:**
-- Detectar URLs al guardar captura
-- Si es GitHub: mostrar icono 🐙 + repo/issue
-- Si es YouTube: mostrar icono ▶️ + título
-- Otros enlaces: icono 🔗 + dominio
+### 8.1 Smart Pasting ✅
+- Detecta URLs al guardar captura
+- GitHub: 🐙 + repo/issue
+- YouTube: ▶️
+- StackOverflow: 📚
+- Otros enlaces: 🔗 + dominio
+- Funciones: `renderSmartLink()`, `getDomainFromUrl()`, `getUrlIcon()`, `getUrlLabel()`
 
-### 8.2 Búsqueda rápida 🔍
-**Propuesta:** Barra de búsqueda global para filtrar proyectos, capturas y tools
+### 8.2 Búsqueda rápida ✅
+- Barra de búsqueda global en header
+- Busca en: proyectos, tools, patterns, flows, capturas, bocetos
+- Resultados agrupados por categoría
+- Highlight del término buscado
+- Click navega directamente al elemento
+- Funciones: `initSearch()`, `performSearch()`, `renderSearchResults()`, `goToSearchResult()`
 
-### 8.3 Promocionar boceto a proyecto 📤
-**Propuesta:** Botón para convertir boceto en proyecto real (crear archivo .md en DirectOS)
+### 8.3 Promocionar boceto a proyecto ✅
+- Botón "🚀 Crear proyecto" en cada boceto
+- Genera archivo .md con estructura completa de proyecto DirectOS
+- Si DirectOS está corriendo: crea archivo via API POST /api/projects
+- Si offline: crea proyecto local temporal
+- Elimina el boceto después de promocionar
+- Función: `promoteDraft()`
 
 ---
 
-*"Piano piano se arriva lontano"* - Dashboard v1.1 completado
+## Resumen v1.2
+
+| Mejora | Estado |
+|--------|--------|
+| 8.1 Smart Pasting | ✅ |
+| 8.2 Búsqueda rápida | ✅ |
+| 8.3 Promocionar boceto | ✅ |
+
+---
+
+*"Piano piano se arriva lontano"* - Dashboard v1.2 completado

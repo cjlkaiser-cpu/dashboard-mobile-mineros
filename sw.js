@@ -1,5 +1,5 @@
 // minerOS Dashboard Service Worker
-const CACHE_NAME = 'mineros-dashboard-v1';
+const CACHE_NAME = 'mineros-dashboard-v1.2';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',

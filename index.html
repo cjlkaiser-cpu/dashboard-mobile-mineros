@@ -130,6 +130,156 @@
         50% { opacity: 0.5; }
       }
 
+      /* ===== SEARCH BAR ===== */
+      .search-bar {
+        margin-top: 0.75rem;
+        position: relative;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 0.6rem 0.75rem 0.6rem 2.25rem;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: var(--text);
+        font-size: 0.9rem;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+
+      .search-input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-soft);
+      }
+
+      .search-input::placeholder {
+        color: var(--muted);
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+        font-size: 0.9rem;
+        pointer-events: none;
+      }
+
+      .search-clear {
+        position: absolute;
+        right: 0.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--bg-soft);
+        border: none;
+        color: var(--muted);
+        font-size: 1rem;
+        padding: 0.25rem 0.5rem;
+        cursor: pointer;
+        border-radius: 6px;
+        display: none;
+      }
+
+      .search-clear.visible {
+        display: block;
+      }
+
+      /* Search Results */
+      .search-results {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        margin-top: 0.5rem;
+        background: var(--bg-soft);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        max-height: 60vh;
+        overflow-y: auto;
+        z-index: 100;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        display: none;
+      }
+
+      .search-results.active {
+        display: block;
+      }
+
+      .search-section {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .search-section:last-child {
+        border-bottom: none;
+      }
+
+      .search-section-title {
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 0.25rem 0.75rem;
+      }
+
+      .search-result-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.6rem 0.75rem;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+
+      .search-result-item:hover,
+      .search-result-item:active {
+        background: var(--bg);
+      }
+
+      .search-result-icon {
+        font-size: 1.1rem;
+        width: 1.5rem;
+        text-align: center;
+      }
+
+      .search-result-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .search-result-name {
+        font-size: 0.9rem;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .search-result-meta {
+        font-size: 0.75rem;
+        color: var(--muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .search-highlight {
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 2px;
+        padding: 0 2px;
+      }
+
+      .search-no-results {
+        text-align: center;
+        padding: 1.5rem;
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+
       /* ===== CARDS ===== */
       .card {
         background: var(--bg-soft);
@@ -369,6 +519,17 @@
         border-color: var(--accent);
         color: var(--accent);
         background: var(--accent-soft);
+      }
+
+      .tag.promote {
+        border-color: var(--ok);
+        color: var(--ok);
+        background: rgba(34, 197, 94, 0.15);
+        cursor: pointer;
+      }
+
+      .tag.promote:active {
+        transform: scale(0.95);
       }
 
       /* ===== PROJECT DETAIL ===== */
@@ -708,6 +869,25 @@
 
       .capture-text .md-list {
         display: block;
+      }
+
+      .smart-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.15rem 0.4rem;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.8em;
+        transition: all 0.15s ease;
+      }
+
+      .smart-link:active {
+        transform: scale(0.97);
+        background: var(--accent-soft);
         padding-left: 0.5rem;
       }
 
@@ -1341,6 +1521,14 @@
           </span>
         </div>
         <div class="header-date" id="headerDate"></div>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input" id="globalSearch" placeholder="Buscar proyectos, tools, capturas..." autocomplete="off" />
+          <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+          <div class="search-results" id="searchResults"></div>
+        </div>
       </header>
 
       <!-- ===== HOME VIEW ===== -->
@@ -1586,8 +1774,13 @@
       const STORAGE_KEY = 'mineros-dashboard-v2';
 
       // ===== API CONFIG =====
+      // Auto-detect: si accedes desde otro dispositivo, usa la misma IP pero puerto 8000
+      const API_HOST = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'localhost'
+        : window.location.hostname;
+
       const API_CONFIG = {
-        baseUrl: 'http://localhost:8000',
+        baseUrl: `http://${API_HOST}:8000`,
         endpoints: {
           health: '/api/health',
           projects: '/api/projects',
@@ -2016,6 +2209,7 @@
       function init() {
         loadState();
         updateHeaderDate();
+        initSearch();
         renderHome();
         renderProjects();
         renderStack();
@@ -2241,7 +2435,8 @@
               <div class="project-desc">${escapeHTML(d.idea || 'Sin descripción')}</div>
               <div class="project-tags">
                 ${d.stack.slice(0, 3).map(s => `<span class="tag">${escapeHTML(s)}</span>`).join('')}
-                <span class="tag" style="color: var(--muted); cursor: pointer;" onclick="event.stopPropagation(); deleteDraft('${d.id}')">🗑️ Eliminar</span>
+                <span class="tag promote" onclick="event.stopPropagation(); promoteDraft('${d.id}')">🚀 Crear proyecto</span>
+                <span class="tag" style="color: var(--muted); cursor: pointer;" onclick="event.stopPropagation(); deleteDraft('${d.id}')">🗑️</span>
               </div>
             </div>
           `).join('');
@@ -2268,7 +2463,8 @@
               <div class="project-desc">${escapeHTML(d.idea || 'Sin descripción')}</div>
               <div class="project-tags">
                 ${d.stack.slice(0, 3).map(s => `<span class="tag">${escapeHTML(s)}</span>`).join('')}
-                <span class="tag" style="color: var(--muted); cursor: pointer;" onclick="event.stopPropagation(); deleteDraft('${d.id}')">🗑️ Eliminar</span>
+                <span class="tag promote" onclick="event.stopPropagation(); promoteDraft('${d.id}')">🚀 Crear proyecto</span>
+                <span class="tag" style="color: var(--muted); cursor: pointer;" onclick="event.stopPropagation(); deleteDraft('${d.id}')">🗑️</span>
               </div>
             </div>
           `).join('');
@@ -2434,7 +2630,7 @@
         document.getElementById('capturesList').innerHTML = captures.map((c, i) => `
           <div class="capture-wrapper">
             <div class="capture-delete-bg" onclick="deleteCapture(${i})">🗑️</div>
-            <div class="capture-item" data-index="${i}">
+            <div class="capture-item" data-index="${i}" data-capture-id="${c.id}">
               <div class="capture-header">
                 <span>
                   <span class="capture-type ${c.type}">${getTypeEmoji(c.type)} ${c.type}</span>
@@ -2692,10 +2888,389 @@
           .replace(/`([^`]+)`/g, '<code>$1</code>')
           // Lists: - item (at start of line)
           .replace(/^- (.+)$/gm, '<span class="md-list">• $1</span>')
+          // Smart Links: detect URLs and render with icons
+          .replace(/(https?:\/\/[^\s<]+)/g, (url) => renderSmartLink(url))
           // Line breaks
           .replace(/\n/g, '<br>');
 
         return safe;
+      }
+
+      function renderSmartLink(url) {
+        const domain = getDomainFromUrl(url);
+        const icon = getUrlIcon(domain);
+        const label = getUrlLabel(url, domain);
+        return `<a href="${url}" target="_blank" rel="noopener" class="smart-link">${icon} ${label}</a>`;
+      }
+
+      function getDomainFromUrl(url) {
+        try {
+          const parsed = new URL(url);
+          return parsed.hostname.replace('www.', '');
+        } catch {
+          return '';
+        }
+      }
+
+      function getUrlIcon(domain) {
+        const icons = {
+          'github.com': '🐙',
+          'youtube.com': '▶️',
+          'youtu.be': '▶️',
+          'stackoverflow.com': '📚',
+          'twitter.com': '🐦',
+          'x.com': '🐦',
+          'npmjs.com': '📦',
+          'pypi.org': '🐍',
+          'docs.python.org': '🐍',
+          'developer.mozilla.org': '🦊',
+          'anthropic.com': '🤖',
+          'claude.ai': '🤖',
+          'openai.com': '🤖',
+          'notion.so': '📝',
+          'figma.com': '🎨',
+          'dribbble.com': '🎨',
+          'medium.com': '📰',
+          'dev.to': '👨‍💻',
+          'localhost': '🖥️'
+        };
+        return icons[domain] || '🔗';
+      }
+
+      function getUrlLabel(url, domain) {
+        // GitHub: show repo/issue path
+        if (domain === 'github.com') {
+          const path = url.replace('https://github.com/', '');
+          const parts = path.split('/');
+          if (parts.length >= 2) {
+            // repo/owner or repo/owner/issues/123
+            if (parts[2] === 'issues' && parts[3]) {
+              return `${parts[0]}/${parts[1]}#${parts[3]}`;
+            }
+            if (parts[2] === 'pull' && parts[3]) {
+              return `${parts[0]}/${parts[1]} PR#${parts[3]}`;
+            }
+            return `${parts[0]}/${parts[1]}`;
+          }
+        }
+
+        // YouTube: just show "YouTube"
+        if (domain === 'youtube.com' || domain === 'youtu.be') {
+          return 'YouTube';
+        }
+
+        // StackOverflow: show "SO"
+        if (domain === 'stackoverflow.com') {
+          return 'StackOverflow';
+        }
+
+        // Default: show domain
+        return domain.length > 20 ? domain.substring(0, 20) + '...' : domain;
+      }
+
+      // ===== GLOBAL SEARCH =====
+      let searchTimeout = null;
+
+      function initSearch() {
+        const searchInput = document.getElementById('globalSearch');
+        const searchResults = document.getElementById('searchResults');
+        const searchClear = document.getElementById('searchClear');
+
+        searchInput.addEventListener('input', (e) => {
+          const query = e.target.value.trim();
+          searchClear.classList.toggle('visible', query.length > 0);
+
+          clearTimeout(searchTimeout);
+          if (query.length < 2) {
+            searchResults.classList.remove('active');
+            return;
+          }
+
+          searchTimeout = setTimeout(() => {
+            performSearch(query);
+          }, 150);
+        });
+
+        searchInput.addEventListener('focus', () => {
+          const query = searchInput.value.trim();
+          if (query.length >= 2) {
+            performSearch(query);
+          }
+        });
+
+        // Close search when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('.search-bar')) {
+            searchResults.classList.remove('active');
+          }
+        });
+      }
+
+      function clearSearch() {
+        const searchInput = document.getElementById('globalSearch');
+        const searchResults = document.getElementById('searchResults');
+        const searchClear = document.getElementById('searchClear');
+
+        searchInput.value = '';
+        searchClear.classList.remove('visible');
+        searchResults.classList.remove('active');
+        searchInput.focus();
+      }
+
+      function performSearch(query) {
+        const lowerQuery = query.toLowerCase();
+        const results = {
+          projects: [],
+          tools: [],
+          captures: [],
+          patterns: [],
+          flows: [],
+          drafts: []
+        };
+
+        // Search projects
+        PROJECTS.forEach(p => {
+          if (
+            p.name.toLowerCase().includes(lowerQuery) ||
+            (p.description && p.description.toLowerCase().includes(lowerQuery)) ||
+            (p.stack && p.stack.some(s => s.toLowerCase().includes(lowerQuery)))
+          ) {
+            results.projects.push(p);
+          }
+        });
+
+        // Search tools
+        TOOLS.forEach(t => {
+          if (
+            t.name.toLowerCase().includes(lowerQuery) ||
+            (t.category && t.category.toLowerCase().includes(lowerQuery)) ||
+            (t.description && t.description.toLowerCase().includes(lowerQuery))
+          ) {
+            results.tools.push(t);
+          }
+        });
+
+        // Search patterns
+        PATTERNS.forEach(p => {
+          if (
+            p.name.toLowerCase().includes(lowerQuery) ||
+            (p.description && p.description.toLowerCase().includes(lowerQuery))
+          ) {
+            results.patterns.push(p);
+          }
+        });
+
+        // Search flows
+        FLOWS.forEach(f => {
+          if (
+            f.name.toLowerCase().includes(lowerQuery) ||
+            (f.description && f.description.toLowerCase().includes(lowerQuery)) ||
+            (f.stack && f.stack.some(s => s.toLowerCase().includes(lowerQuery)))
+          ) {
+            results.flows.push(f);
+          }
+        });
+
+        // Search captures
+        state.captures.forEach(c => {
+          if (c.text.toLowerCase().includes(lowerQuery)) {
+            results.captures.push(c);
+          }
+        });
+
+        // Search drafts
+        state.drafts.forEach(d => {
+          if (
+            d.name.toLowerCase().includes(lowerQuery) ||
+            (d.idea && d.idea.toLowerCase().includes(lowerQuery)) ||
+            (d.stack && d.stack.some(s => s.toLowerCase().includes(lowerQuery)))
+          ) {
+            results.drafts.push(d);
+          }
+        });
+
+        renderSearchResults(results, query);
+      }
+
+      function renderSearchResults(results, query) {
+        const searchResults = document.getElementById('searchResults');
+        const total = results.projects.length + results.tools.length + results.captures.length +
+                      results.patterns.length + results.flows.length + results.drafts.length;
+
+        if (total === 0) {
+          searchResults.innerHTML = `
+            <div class="search-no-results">
+              No se encontraron resultados para "${escapeHTML(query)}"
+            </div>
+          `;
+          searchResults.classList.add('active');
+          return;
+        }
+
+        let html = '';
+
+        // Projects
+        if (results.projects.length > 0) {
+          html += `
+            <div class="search-section">
+              <div class="search-section-title">📁 Proyectos</div>
+              ${results.projects.slice(0, 4).map(p => `
+                <div class="search-result-item" onclick="goToSearchResult('project', '${p.id}')">
+                  <span class="search-result-icon">${p.icon || '📦'}</span>
+                  <div class="search-result-info">
+                    <div class="search-result-name">${highlightMatch(p.name, query)}</div>
+                    <div class="search-result-meta">${p.status} · ${(p.stack || []).slice(0, 2).join(', ')}</div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        // Tools
+        if (results.tools.length > 0) {
+          html += `
+            <div class="search-section">
+              <div class="search-section-title">🔧 Tools</div>
+              ${results.tools.slice(0, 4).map(t => `
+                <div class="search-result-item" onclick="goToSearchResult('tool', '${t.id}')">
+                  <span class="search-result-icon">🔧</span>
+                  <div class="search-result-info">
+                    <div class="search-result-name">${highlightMatch(t.name, query)}</div>
+                    <div class="search-result-meta">${t.category || ''}</div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        // Patterns
+        if (results.patterns.length > 0) {
+          html += `
+            <div class="search-section">
+              <div class="search-section-title">🧩 Patterns</div>
+              ${results.patterns.slice(0, 3).map(p => `
+                <div class="search-result-item" onclick="goToSearchResult('pattern', '${p.id}')">
+                  <span class="search-result-icon">🧩</span>
+                  <div class="search-result-info">
+                    <div class="search-result-name">${highlightMatch(p.name, query)}</div>
+                    <div class="search-result-meta">${(p.description || '').substring(0, 40)}...</div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        // Flows
+        if (results.flows.length > 0) {
+          html += `
+            <div class="search-section">
+              <div class="search-section-title">⚡ Flows</div>
+              ${results.flows.slice(0, 3).map(f => `
+                <div class="search-result-item" onclick="goToSearchResult('flow', '${f.id}')">
+                  <span class="search-result-icon">⚡</span>
+                  <div class="search-result-info">
+                    <div class="search-result-name">${highlightMatch(f.name, query)}</div>
+                    <div class="search-result-meta">${(f.stack || []).slice(0, 2).join(', ')}</div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        // Captures
+        if (results.captures.length > 0) {
+          html += `
+            <div class="search-section">
+              <div class="search-section-title">💡 Capturas</div>
+              ${results.captures.slice(0, 3).map(c => `
+                <div class="search-result-item" onclick="goToSearchResult('capture', '${c.id}')">
+                  <span class="search-result-icon">${getTypeEmoji(c.type)}</span>
+                  <div class="search-result-info">
+                    <div class="search-result-name">${highlightMatch(c.text.substring(0, 50), query)}${c.text.length > 50 ? '...' : ''}</div>
+                    <div class="search-result-meta">${c.type} · ${formatTime(c.timestamp)}</div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        // Drafts
+        if (results.drafts.length > 0) {
+          html += `
+            <div class="search-section">
+              <div class="search-section-title">📝 Bocetos</div>
+              ${results.drafts.slice(0, 3).map(d => `
+                <div class="search-result-item" onclick="goToSearchResult('draft', '${d.id}')">
+                  <span class="search-result-icon">📝</span>
+                  <div class="search-result-info">
+                    <div class="search-result-name">${highlightMatch(d.name, query)}</div>
+                    <div class="search-result-meta">${(d.stack || []).slice(0, 2).join(', ')}</div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        searchResults.innerHTML = html;
+        searchResults.classList.add('active');
+      }
+
+      function highlightMatch(text, query) {
+        const escaped = escapeHTML(text);
+        const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+        return escaped.replace(regex, '<span class="search-highlight">$1</span>');
+      }
+
+      function escapeRegex(str) {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function goToSearchResult(type, id) {
+        // Clear search
+        document.getElementById('globalSearch').value = '';
+        document.getElementById('searchResults').classList.remove('active');
+        document.getElementById('searchClear').classList.remove('visible');
+
+        haptic();
+
+        switch (type) {
+          case 'project':
+            showProjectDetail(id);
+            break;
+          case 'tool':
+            showView('stack');
+            setStackTab('tools');
+            setTimeout(() => showToolDetail(id), 100);
+            break;
+          case 'pattern':
+            showView('stack');
+            setStackTab('patterns');
+            setTimeout(() => showPatternDetail(id), 100);
+            break;
+          case 'flow':
+            showView('stack');
+            setStackTab('flows');
+            setTimeout(() => showFlowDetail(id), 100);
+            break;
+          case 'capture':
+            showView('captures');
+            // Scroll to capture if possible
+            setTimeout(() => {
+              const captureEl = document.querySelector(`[data-capture-id="${id}"]`);
+              if (captureEl) captureEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+            break;
+          case 'draft':
+            showView('projects');
+            setProjectFilter('draft');
+            break;
+        }
       }
 
       function detectProject(text) {
@@ -2969,6 +3544,133 @@
           renderProjects();
           showToast('Boceto eliminado');
           haptic(10);
+        }
+      }
+
+      async function promoteDraft(id) {
+        const draft = state.drafts.find(d => d.id === id);
+        if (!draft) return;
+
+        haptic(20);
+
+        // Generate project ID from name
+        const projectId = draft.name
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '');
+
+        // Create markdown content for DirectOS
+        const mdContent = `---
+id: ${projectId}
+name: ${draft.name}
+version: v0.1
+status: prototype
+stack:
+${draft.stack.map(s => `  - ${s.toLowerCase()}`).join('\n')}
+repo:
+description: ${draft.idea || 'Nuevo proyecto'}
+---
+
+# ${draft.name}
+
+${draft.idea || 'Descripción del proyecto.'}
+
+## Flujo de trabajo
+
+1. **TODO:** Definir flujo principal
+
+## Comandos principales
+
+\`\`\`bash
+# TODO: Añadir comandos
+\`\`\`
+
+## Arquitectura
+
+\`\`\`
+${projectId}/
+└── TODO: Definir estructura
+\`\`\`
+
+### Stack técnico
+
+${draft.stack.map(s => `- **${s}**`).join('\n')}
+
+## Aprendizajes clave
+
+### Lo que funcionó bien
+
+- TODO
+
+### Problemas resueltos
+
+- TODO
+
+## Métricas
+
+- **Estado:** En desarrollo
+- **Creado desde boceto:** ${new Date().toISOString().split('T')[0]}
+`;
+
+        // Try to create project via DirectOS API
+        try {
+          const response = await fetch(`${API_CONFIG.baseUrl}/api/projects`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              id: projectId,
+              name: draft.name,
+              content: mdContent
+            }),
+            signal: AbortSignal.timeout(API_CONFIG.timeout)
+          });
+
+          if (response.ok) {
+            // Remove draft after successful creation
+            const index = state.drafts.findIndex(d => d.id === id);
+            if (index > -1) {
+              state.drafts.splice(index, 1);
+              saveStateSilent();
+            }
+
+            // Sync to get new project
+            await syncWithAPI();
+
+            showToast('🚀 Proyecto creado en DirectOS');
+            renderProjects();
+            renderHome();
+          } else {
+            throw new Error('API error');
+          }
+        } catch (error) {
+          console.log('DirectOS no disponible, guardando localmente');
+
+          // Add as local project placeholder
+          const newProject = {
+            id: projectId,
+            name: draft.name,
+            icon: '🚧',
+            status: 'prototype',
+            stack: draft.stack,
+            description: draft.idea || 'Nuevo proyecto',
+            version: 'v0.1',
+            local: true // Mark as local-only
+          };
+
+          PROJECTS.unshift(newProject);
+
+          // Remove draft
+          const index = state.drafts.findIndex(d => d.id === id);
+          if (index > -1) {
+            state.drafts.splice(index, 1);
+            saveStateSilent();
+          }
+
+          showToast('📦 Proyecto creado (local)');
+          renderProjects();
+          renderHome();
         }
       }
 
